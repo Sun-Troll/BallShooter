@@ -316,6 +316,25 @@ void Graphics::PutPixel( int x,int y,Color c )
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
 }
 
+void Graphics::drawCircle(const Vec2& center, float radius, Color c)
+{
+	const Vec2 topLeft(center.x - radius, center.y - radius);
+	const int diameter = int(radius * 2);
+	const float radSq = radius * radius;
+
+	for (int y = 1; y < diameter; y++)
+	{
+		for (int x = 1; x < diameter; x++)
+		{
+			Vec2 curDrawPos = topLeft + Vec2(float(x), float(y));
+			if ((center - curDrawPos).GetLengthSq() < radSq) //doesn't draw pixel on the edge
+			{
+				PutPixel(int(curDrawPos.x), int(curDrawPos.y), c);
+			}
+		}
+	}
+}
+
 
 //////////////////////////////////////////////////
 //           Graphics Exception
