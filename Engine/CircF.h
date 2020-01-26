@@ -7,7 +7,7 @@ class CircF
 public:
 	CircF(const Vec2& center_in, float radius_in);
 	bool IsOverlapping(const CircF& circ) const;
-private:
+public:
 	Vec2 center;
 	float radius;
 };
