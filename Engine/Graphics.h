@@ -63,6 +63,11 @@ public:
 	{
 		DrawCircle(circ.center, circ.radius, c);
 	}
+	void DrawCircOutline(const Vec2& center, float radius, float thickness, Color c);
+	void DrawCircOutline(const CircF& circ, float thickness, Color c)
+	{
+		DrawCircOutline(circ.center, circ.radius, thickness, c);
+	}
 	~Graphics();
 private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain>				pSwapChain;

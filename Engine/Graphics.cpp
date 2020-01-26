@@ -240,6 +240,29 @@ Graphics::Graphics( HWNDKey& key )
 		_aligned_malloc( sizeof( Color ) * Graphics::ScreenWidth * Graphics::ScreenHeight,16u ) );
 }
 
+void Graphics::DrawCircOutline(const Vec2& center, float radius, float thickness, Color c)
+{
+	assert(thickness < radius);
+	const Vec2 topLeft(center.x - radius, center.y - radius);
+	const int diameter = int(radius * 2);
+	const float radSq = radius * radius;
+	const float innerRad = radius - thickness;
+	const float innerRadSq = innerRad * innerRad;
+
+	for (int y = 1; y < diameter; y++)
+	{
+		for (int x = 1; x < diameter; x++)
+		{
+			const Vec2 curDrawPos = topLeft + Vec2(float(x), float(y));
+			const float currentDist = (center - curDrawPos).GetLengthSq();
+			if (currentDist < radSq && currentDist >= innerRadSq)
+			{
+				PutPixel(int(curDrawPos.x), int(curDrawPos.y), c);
+			}
+		}
+	}
+}
+
 Graphics::~Graphics()
 {
 	// free sysbuffer memory (aligned free)
@@ -326,7 +349,7 @@ void Graphics::DrawCircle(const Vec2& center, float radius, Color c)
 	{
 		for (int x = 1; x < diameter; x++)
 		{
-			Vec2 curDrawPos = topLeft + Vec2(float(x), float(y));
+			const Vec2 curDrawPos = topLeft + Vec2(float(x), float(y));
 			if ((center - curDrawPos).GetLengthSq() < radSq) //doesn't draw pixel on the edge
 			{
 				PutPixel(int(curDrawPos.x), int(curDrawPos.y), c);
