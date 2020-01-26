@@ -38,6 +38,7 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	float cft = ft.FrameDuration();
 }
 
 void Game::ComposeFrame()
