@@ -316,7 +316,7 @@ void Graphics::PutPixel( int x,int y,Color c )
 	pSysBuffer[Graphics::ScreenWidth * y + x] = c;
 }
 
-void Graphics::drawCircle(const Vec2& center, float radius, Color c)
+void Graphics::DrawCircle(const Vec2& center, float radius, Color c)
 {
 	const Vec2 topLeft(center.x - radius, center.y - radius);
 	const int diameter = int(radius * 2);
