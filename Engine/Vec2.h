@@ -16,7 +16,7 @@ public:
 	float GetLength() const;
 	Vec2 GetNormalized() const;
 	Vec2& Normalize();
-private:
+public:
 	float x;
 	float y;
 };
