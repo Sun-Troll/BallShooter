@@ -38,9 +38,40 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	float cft = ft.FrameDuration();
+	float dt = ft.FrameDuration();
+
+	bool left = false;
+	bool right = false;
+	bool up = false;
+	bool down = false;
+	if (wnd.kbd.KeyIsPressed('A'))
+	{
+		left = true;
+	}
+	else if (wnd.kbd.KeyIsPressed('D'))
+	{
+		right = true;
+	}
+	if (wnd.kbd.KeyIsPressed('W'))
+	{
+		up = true;
+	}
+	else if (wnd.kbd.KeyIsPressed('S'))
+	{
+		down = true;
+	}
+	player.Move(dt, left, right, up, down);
+	player.ClampScreen();
 }
 
 void Game::ComposeFrame()
 {
+	for (int y = 0; y < Graphics::ScreenHeight; y++)
+	{
+		for (int x = 397; x < 400; x++)
+		{
+			gfx.PutPixel(x, y, Colors::White);
+		}
+	}
+	player.Draw(gfx);
 }
