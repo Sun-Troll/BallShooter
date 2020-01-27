@@ -44,6 +44,7 @@ void Game::UpdateModel()
 	bool right = false;
 	bool up = false;
 	bool down = false;
+	bool fire = false;
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
 		left = true;
@@ -60,8 +61,17 @@ void Game::UpdateModel()
 	{
 		down = true;
 	}
+	if (wnd.mouse.LeftIsPressed())
+	{
+		fire = true;
+	}
 	player.Move(dt, left, right, up, down);
 	player.ClampScreen();
+	if (player.Fire(wnd.mouse.GetPos(), dt, fire))
+	{
+		//sound
+	}
+	player.UpdateBullets(dt);
 }
 
 void Game::ComposeFrame()
@@ -74,4 +84,5 @@ void Game::ComposeFrame()
 		}
 	}
 	player.Draw(gfx);
+	player.DrawBullets(gfx);
 }
