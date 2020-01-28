@@ -63,7 +63,7 @@ bool Player::SlowDown(float dt, bool slow)
 	return isSlowed;
 }
 
-void Player::Fire(const Vec2& mousePos, float dt, bool moving)
+bool Player::Fire(const Vec2& mousePos, float dt, bool moving)
 {
 	fireTime -= dt;
 	if (!moving)
@@ -83,7 +83,9 @@ void Player::Fire(const Vec2& mousePos, float dt, bool moving)
 		{
 			currentBullet = 0;
 		}
+		return true;
 	}
+	return false;
 }
 
 void Player::UpdateBullets(float dt)

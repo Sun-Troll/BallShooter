@@ -45,6 +45,7 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	Sound basicFire;
 	Sound telFire;
 	Sound telPort;
 	FrameTimer ft;

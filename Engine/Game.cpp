@@ -21,10 +21,11 @@
 #include "MainWindow.h"
 #include "Game.h"
 
-Game::Game( MainWindow& wnd )
+Game::Game(MainWindow& wnd)
 	:
-	wnd( wnd ),
-	gfx( wnd ),
+	wnd(wnd),
+	gfx(wnd),
+	basicFire(L"Sounds\\basicFire.wav"),
 	telFire(L"Sounds\\telFire.wav"),
 	telPort(L"Sounds\\telPort.wav")
 {
@@ -90,7 +91,10 @@ void Game::UpdateModel()
 	}
 	player.Move(dt, left, right, up, down);
 	player.ClampScreen();
-	player.Fire(wnd.mouse.GetPos(), dt, moving);
+	if (player.Fire(wnd.mouse.GetPos(), dt, moving))
+	{
+		basicFire.Play();
+	}
 	player.UpdateBullets(dt);
 	const Player::TeleportState telState = player.TeleportFirePort(fTelMousePos, dt, fireTeleport);
 	if (telState == Player::TeleportState::Fire)

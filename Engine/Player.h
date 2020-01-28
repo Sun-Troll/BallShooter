@@ -49,7 +49,7 @@ public:
 	void Move(float dt, bool left, bool right, bool up, bool down);
 	void ClampScreen();
 	bool SlowDown(float dt, bool slow);
-	void Fire(const Vec2& mousePos, float dt, bool moving);
+	bool Fire(const Vec2& mousePos, float dt, bool moving);
 	void UpdateBullets(float dt);
 	TeleportState TeleportFirePort(const Vec2& mousePos, float dt, bool fire);
 	void UpdateTelleport(float dt);
