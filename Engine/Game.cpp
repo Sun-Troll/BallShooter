@@ -24,7 +24,9 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	telFire(L"Sounds\\telFire.wav"),
+	telPort(L"Sounds\\telPort.wav")
 {
 }
 
@@ -91,6 +93,14 @@ void Game::UpdateModel()
 	player.Fire(wnd.mouse.GetPos(), dt, moving);
 	player.UpdateBullets(dt);
 	const Player::TeleportState telState = player.TeleportFirePort(fTelMousePos, dt, fireTeleport);
+	if (telState == Player::TeleportState::Fire)
+	{
+		telFire.Play();
+	}
+	else if (telState == Player::TeleportState::Port)
+	{
+		telPort.Play();
+	}
 	player.UpdateTelleport(dt);
 }
 

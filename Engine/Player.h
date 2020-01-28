@@ -76,4 +76,7 @@ private:
 	int currentBullet = 0;
 	Bullet bullets[nBullets];
 	Teleport teleport;
+	//teleport
+	static constexpr float telRech = 2.0f;
+	float telRechCur = 0.0f;
 };

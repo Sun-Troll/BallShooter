@@ -97,16 +97,22 @@ void Player::UpdateBullets(float dt)
 
 Player::TeleportState Player::TeleportFirePort(const Vec2 & mousePos, float dt, bool fire)
 {
+	const bool telActive = teleport.GetActive();
+	if (!telActive)
+	{
+		telRechCur -= dt;
+	}
 	if (fire)
 	{
-		if (teleport.GetActive())
+		if (telActive)
 		{
 			pos = teleport.GetPos();
 			teleport.Port();
 			return TeleportState::Port;
 		}
-		else
+		else if (telRechCur <= 0.0f)
 		{
+			telRechCur = telRech;
 			teleport.Spawn(mousePos, pos);
 			return TeleportState::Fire;
 		}

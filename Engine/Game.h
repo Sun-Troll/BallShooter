@@ -25,6 +25,7 @@
 #include "Graphics.h"
 #include "FrameTimer.h"
 #include "Player.h"
+#include "SoundEffect.h"
 
 class Game
 {
@@ -44,6 +45,8 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	Sound telFire;
+	Sound telPort;
 	FrameTimer ft;
 	Player player;
 	/********************************/
