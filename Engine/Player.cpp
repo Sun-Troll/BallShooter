@@ -43,10 +43,35 @@ void Player::ClampScreen()
 	}
 }
 
-bool Player::Fire(const Vec2& mousePos, float dt, bool fire)
+bool Player::SlowDown(float dt, bool slow)
+{
+	if (slow && slowRechRem <= 0.0f)
+	{
+		isSlowed = true;
+		slowRechRem = slowRech;
+		slowDurRem = slowDur;
+	}
+	if (isSlowed && slowDurRem > 0.0f)
+	{
+		slowDurRem -= dt;
+	}
+	else
+	{
+		isSlowed = false;
+		slowRechRem -= dt;
+	}
+	return isSlowed;
+}
+
+void Player::Fire(const Vec2& mousePos, float dt, bool moving)
 {
 	fireTime -= dt;
-	if (fireTime <= 0.0f && fire)
+	if (!moving)
+	{
+		fireTime -= dt;
+	}
+	
+	if (fireTime <= 0.0f)
 	{
 		fireTime = fireRate;
 		bullets[currentBullet].Spawn(mousePos, pos);
@@ -58,9 +83,7 @@ bool Player::Fire(const Vec2& mousePos, float dt, bool fire)
 		{
 			currentBullet = 0;
 		}
-		return true;
 	}
-	return false;
 }
 
 void Player::UpdateBullets(float dt)
@@ -79,8 +102,14 @@ CircF Player::GetCirc() const
 
 void Player::Draw(Graphics& gfx) const
 {
-	int blue = std::max(hp, 0) * 255 / hpMax;
-	gfx.DrawCircle(GetCirc(), Color{ 255, 0, unsigned char(std::max(hp, 0) * 255 / hpMax) });
+	const unsigned char color = (std::max(hp, 0) * 255 / hpMax);
+	const float outline = 3.0f;
+	CircF circ = GetCirc();
+	gfx.DrawCircOutline(circ, outline, Colors::White);
+	circ.radius -= outline + 2.0f;
+	gfx.DrawCircOutline(circ, outline, Color{ color, color, color });
+	circ.radius -= outline + 2.0f;
+	gfx.DrawCircle(circ, Colors::White);
 }
 
 void Player::DrawBullets(Graphics& gfx)
@@ -138,6 +167,6 @@ void Player::Bullet::Draw(Graphics& gfx) const
 {
 	if (active)
 	{
-		gfx.DrawCircle(GetCirc(), Color{ 200, 0, 255 });
+		gfx.DrawCircle(GetCirc(), Color{ 255, 255, 255 });
 	}
 }

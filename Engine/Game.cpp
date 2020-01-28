@@ -40,37 +40,43 @@ void Game::UpdateModel()
 {
 	float dt = ft.FrameDuration();
 
+	bool slow = false;
 	bool left = false;
 	bool right = false;
 	bool up = false;
 	bool down = false;
-	bool fire = false;
+	bool moving = false;
+	if (wnd.kbd.KeyIsPressed(VK_SPACE))
+	{
+		slow = true;
+	}
 	if (wnd.kbd.KeyIsPressed('A'))
 	{
 		left = true;
+		moving = true;
 	}
 	else if (wnd.kbd.KeyIsPressed('D'))
 	{
 		right = true;
+		moving = true;
 	}
 	if (wnd.kbd.KeyIsPressed('W'))
 	{
 		up = true;
+		moving = true;
 	}
 	else if (wnd.kbd.KeyIsPressed('S'))
 	{
 		down = true;
+		moving = true;
 	}
-	if (wnd.mouse.LeftIsPressed())
+	if (player.SlowDown(dt, slow))
 	{
-		fire = true;
+		dt /= 2.0f;
 	}
 	player.Move(dt, left, right, up, down);
 	player.ClampScreen();
-	if (player.Fire(wnd.mouse.GetPos(), dt, fire))
-	{
-		//sound
-	}
+	player.Fire(wnd.mouse.GetPos(), dt, moving);
 	player.UpdateBullets(dt);
 }
 
