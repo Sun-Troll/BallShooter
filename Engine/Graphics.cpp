@@ -341,6 +341,7 @@ void Graphics::PutPixel( int x,int y,Color c )
 
 void Graphics::DrawCircle(const Vec2& center, float radius, Color c)
 {
+	assert(radius >= 0.0f);
 	const Vec2 topLeft(center.x - radius, center.y - radius);
 	const int diameter = int(radius * 2);
 	const float radSq = radius * radius;
