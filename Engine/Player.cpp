@@ -95,6 +95,31 @@ void Player::UpdateBullets(float dt)
 	}
 }
 
+Player::TeleportState Player::TeleportFirePort(const Vec2 & mousePos, float dt, bool fire)
+{
+	if (fire)
+	{
+		if (teleport.GetActive())
+		{
+			pos = teleport.GetPos();
+			teleport.Port();
+			return TeleportState::Port;
+		}
+		else
+		{
+			teleport.Spawn(mousePos, pos);
+			return TeleportState::Fire;
+		}
+	}
+	return TeleportState::Nothing;
+}
+
+void Player::UpdateTelleport(float dt)
+{
+	teleport.Move(dt);
+	teleport.ClampScreen();
+}
+
 CircF Player::GetCirc() const
 {
 	return CircF(pos, radius);
@@ -118,6 +143,11 @@ void Player::DrawBullets(Graphics& gfx)
 	{
 		b.Draw(gfx);
 	}
+}
+
+void Player::DrawTeleport(Graphics& gfx)
+{
+	teleport.Draw(gfx);
 }
 
 void Player::Bullet::Spawn(const Vec2& mousePos, const Vec2& playerPos)
@@ -168,5 +198,75 @@ void Player::Bullet::Draw(Graphics& gfx) const
 	if (active)
 	{
 		gfx.DrawCircle(GetCirc(), Color{ 255, 255, 255 });
+	}
+}
+
+void Player::Teleport::Spawn(const Vec2& mousePos, const Vec2& playerPos)
+{
+	pos = playerPos;
+	vel = (mousePos - playerPos).GetNormalized() * speed;
+	active = true;
+}
+
+void Player::Teleport::Port()
+{
+	active = false;
+}
+
+void Player::Teleport::Move(float dt)
+{
+	if (active)
+	{
+		pos += vel * dt;
+	}
+}
+
+void Player::Teleport::ClampScreen()
+{
+	if (active)
+	{
+		if (pos.x < 399.0f + radius)
+		{
+			active = false;
+		}
+		else if (pos.x > float(Graphics::ScreenWidth) - radius)
+		{
+			active = false;
+		}
+		if (pos.y < -1.0f + radius)
+		{
+			active = false;
+		}
+		else if (pos.y > float(Graphics::ScreenHeight) - radius)
+		{
+			active = false;
+		}
+	}
+}
+
+CircF Player::Teleport::GetCirc() const
+{
+	return CircF(pos, radius);
+}
+
+bool Player::Teleport::GetActive() const
+{
+	return active;
+}
+
+Vec2 Player::Teleport::GetPos() const
+{
+	return Vec2(pos);
+}
+
+void Player::Teleport::Draw(Graphics& gfx) const
+{
+	if (active)
+	{
+		const float outline = 3.0f;
+		CircF circ = GetCirc();
+		gfx.DrawCircOutline(circ, outline, Colors::White);
+		circ.radius -= 2.0f * (outline + 2.0f);
+		gfx.DrawCircle(circ, Colors::White);
 	}
 }

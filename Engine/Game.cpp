@@ -46,6 +46,8 @@ void Game::UpdateModel()
 	bool up = false;
 	bool down = false;
 	bool moving = false;
+	bool fireTeleport = false;
+	Vec2 fTelMousePos{ 0.f, 0.f };
 	if (wnd.kbd.KeyIsPressed(VK_SPACE))
 	{
 		slow = true;
@@ -70,6 +72,16 @@ void Game::UpdateModel()
 		down = true;
 		moving = true;
 	}
+	while (!wnd.mouse.IsEmpty())
+	{
+		const Mouse::Event e = wnd.mouse.Read();
+		if (e.GetType() == Mouse::Event::Type::LPress)
+		{
+			fireTeleport = true;
+			fTelMousePos = e.GetPos();
+		}
+	}
+
 	if (player.SlowDown(dt, slow))
 	{
 		dt /= 2.0f;
@@ -78,6 +90,8 @@ void Game::UpdateModel()
 	player.ClampScreen();
 	player.Fire(wnd.mouse.GetPos(), dt, moving);
 	player.UpdateBullets(dt);
+	const Player::TeleportState telState = player.TeleportFirePort(fTelMousePos, dt, fireTeleport);
+	player.UpdateTelleport(dt);
 }
 
 void Game::ComposeFrame()
@@ -91,4 +105,5 @@ void Game::ComposeFrame()
 	}
 	player.Draw(gfx);
 	player.DrawBullets(gfx);
+	player.DrawTeleport(gfx);
 }
