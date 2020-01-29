@@ -63,6 +63,8 @@ void Game::UpdateModel()
 	bool moving = false;
 	bool fireTeleport = false;
 	Vec2 fTelMousePos{ 0.f, 0.f };
+	bool fireBomb = false;
+	Vec2 fBomMousePos{ 0.f, 0.f };
 	if (wnd.kbd.KeyIsPressed(VK_SPACE))
 	{
 		slow = true;
@@ -95,8 +97,13 @@ void Game::UpdateModel()
 			fireTeleport = true;
 			fTelMousePos = e.GetPos();
 		}
+		if (e.GetType() == Mouse::Event::Type::RPress)
+		{
+			fireBomb = true;
+			fBomMousePos = e.GetPos();
+		}
 	}
-
+	
 	if (player.SlowDown(dt, slow))
 	{
 		dt /= 4.0f;
@@ -118,6 +125,14 @@ void Game::UpdateModel()
 		telPort.Play();
 	}
 	player.UpdateTelleport(dt);
+	if (player.BombFire(fBomMousePos, dt, fireBomb))
+	{
+		//add fire bomb sound
+	}
+	if (player.BombUpdate(dt))
+	{
+		//add explode bomb sound
+	}
 }
 
 void Game::ComposeFrame()
@@ -132,4 +147,5 @@ void Game::ComposeFrame()
 	player.Draw(gfx);
 	player.DrawBullets(gfx);
 	player.DrawTeleport(gfx);
+	player.DrawBombs(gfx);
 }

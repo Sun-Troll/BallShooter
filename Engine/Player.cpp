@@ -128,6 +128,42 @@ void Player::UpdateTelleport(float dt)
 	teleport.ClampScreen();
 }
 
+bool Player::BombFire(const Vec2& mousePos, float dt, bool fire)
+{
+	bombRechCur -= dt;
+
+	if (fire && bombRechCur <= 0.0f)
+	{
+		bombRechCur = bombRech;
+		bombs[currentBomb].Spawn(mousePos, pos);
+		if (currentBomb < nBombs - 1)
+		{
+			currentBomb++;
+		}
+		else
+		{
+			currentBomb = 0;
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Player::BombUpdate(float dt)
+{
+	bool exploded = false;
+	for (Bomb& b : bombs)
+	{
+		b.Move(dt);
+		b.ClampScreen();
+		if (b.Explode(dt))
+		{
+			exploded = true;
+		}
+	}
+	return exploded;
+}
+
 CircF Player::GetCirc() const
 {
 	return CircF(pos, radius);
@@ -145,17 +181,25 @@ void Player::Draw(Graphics& gfx) const
 	gfx.DrawCircle(circ, Colors::White);
 }
 
-void Player::DrawBullets(Graphics& gfx)
+void Player::DrawBullets(Graphics& gfx) const
 {
-	for (Bullet& b : bullets)
+	for (const Bullet& b : bullets)
 	{
 		b.Draw(gfx);
 	}
 }
 
-void Player::DrawTeleport(Graphics& gfx)
+void Player::DrawTeleport(Graphics& gfx) const
 {
 	teleport.Draw(gfx);
+}
+
+void Player::DrawBombs(Graphics& gfx) const
+{
+	for (const Bomb& b : bombs)
+	{
+		b.Draw(gfx);
+	}
 }
 
 void Player::Bullet::Spawn(const Vec2& mousePos, const Vec2& playerPos)
@@ -275,6 +319,77 @@ void Player::Teleport::Draw(Graphics& gfx) const
 		CircF circ = GetCirc();
 		gfx.DrawCircOutline(circ, outline, Colors::White);
 		circ.radius -= 2.0f * (outline + 2.0f);
+		gfx.DrawCircle(circ, Colors::White);
+	}
+}
+
+void Player::Bomb::Spawn(const Vec2& mousePos, const Vec2& playerPos)
+{
+	pos = playerPos;
+	vel = (mousePos - playerPos).GetNormalized() * speed;
+	target = mousePos;
+	active = true;
+}
+
+bool Player::Bomb::Explode(float dt)
+{
+	if (active && (pos + vel * dt - target).GetLengthSq() > (pos - target).GetLengthSq())
+	{
+		exploding = true;
+		return true;
+	}
+	return false;
+}
+
+void Player::Bomb::Move(float dt)
+{
+	if (active && !exploding)
+	{
+		pos += vel * dt;
+	}
+}
+
+void Player::Bomb::ClampScreen()
+{
+	if (active)
+	{
+		if (pos.x < 399.0f + radius)
+		{
+			active = false;
+		}
+		else if (pos.x > float(Graphics::ScreenWidth) - radius)
+		{
+			active = false;
+		}
+		if (pos.y < -1.0f + radius)
+		{
+			active = false;
+		}
+		else if (pos.y > float(Graphics::ScreenHeight) - radius)
+		{
+			active = false;
+		}
+	}
+}
+
+CircF Player::Bomb::GetCirc() const
+{
+	return CircF(pos, radius);
+}
+
+void Player::Bomb::Draw(Graphics& gfx) const
+{
+	if (active && !exploding)
+	{
+		const float outline = 3.0f;
+		CircF circ = GetCirc();
+		gfx.DrawCircOutline(circ, outline, Colors::White);
+		circ.radius -= outline + 2.0f;
+		gfx.DrawCircOutline(circ, outline, Colors::White);
+	}
+	else if (active && exploding)
+	{
+		CircF circ = GetCirc();
 		gfx.DrawCircle(circ, Colors::White);
 	}
 }

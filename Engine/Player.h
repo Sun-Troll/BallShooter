@@ -45,6 +45,24 @@ private:
 		static constexpr float speed = 500.0f;
 		static constexpr float radius = 15.0f;
 	};
+	class Bomb
+	{
+	public:
+		void Spawn(const Vec2& mousePos, const Vec2& playerPos);
+		bool Explode(float dt);
+		void Move(float dt);
+		void ClampScreen();
+		CircF GetCirc() const;
+		void Draw(Graphics& gfx) const;
+	private:
+		Vec2 pos{ float(Graphics::ScreenWidth) / 2.0f + 200.0f, float(Graphics::ScreenHeight) / 2.0f };
+		Vec2 vel{ 0.0f, 0.0f };
+		Vec2 target{ 0.0f, 0.0f };
+		bool active = false;
+		bool exploding = false;
+		static constexpr float speed = 300.0f;
+		static constexpr float radius = 15.0f;
+	};
 public:
 	void Move(float dt, bool left, bool right, bool up, bool down);
 	void ClampScreen();
@@ -53,10 +71,13 @@ public:
 	void UpdateBullets(float dt);
 	TeleportState TeleportFirePort(const Vec2& mousePos, float dt, bool fire);
 	void UpdateTelleport(float dt);
+	bool BombFire(const Vec2& mousePos, float dt, bool fire);
+	bool BombUpdate(float dt);
 	CircF GetCirc() const;
 	void Draw(Graphics& gfx) const;
-	void DrawBullets(Graphics& gfx);
-	void DrawTeleport(Graphics& gfx);
+	void DrawBullets(Graphics& gfx) const;
+	void DrawTeleport(Graphics& gfx) const;
+	void DrawBombs(Graphics& gfx) const;
 private:
 	Vec2 pos{ float(Graphics::ScreenWidth) / 2.0f + 200.0f, float(Graphics::ScreenHeight) / 2.0f };
 	static constexpr float speed = 250.0f;
@@ -75,8 +96,14 @@ private:
 	static constexpr int nBullets = 100;
 	int currentBullet = 0;
 	Bullet bullets[nBullets];
-	Teleport teleport;
 	//teleport
 	static constexpr float telRech = 2.0f;
 	float telRechCur = 0.0f;
+	Teleport teleport;
+	//bomb
+	static constexpr float bombRech = 1.0f; // make larger! (this small only for testing purpose)
+	float bombRechCur = 0.0f;
+	static constexpr int nBombs = 10;
+	int currentBomb = 0;
+	Bomb bombs[nBombs];
 };
