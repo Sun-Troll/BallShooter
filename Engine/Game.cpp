@@ -43,6 +43,18 @@ void Game::UpdateModel()
 {
 	float dt = ft.FrameDuration();
 
+	while (!wnd.kbd.KeyIsEmpty())
+	{
+		const Keyboard::Event e = wnd.kbd.ReadKey();
+		if (e.IsPress())
+		{
+			if (e.GetCode() == 'M')
+			{
+				basicFireSound = !basicFireSound;
+			}
+		}
+	}
+
 	bool slow = false;
 	bool left = false;
 	bool right = false;
@@ -87,11 +99,11 @@ void Game::UpdateModel()
 
 	if (player.SlowDown(dt, slow))
 	{
-		dt /= 2.0f;
+		dt /= 4.0f;
 	}
 	player.Move(dt, left, right, up, down);
 	player.ClampScreen();
-	if (player.Fire(wnd.mouse.GetPos(), dt, moving))
+	if (player.Fire(wnd.mouse.GetPos(), dt, moving) && basicFireSound)
 	{
 		basicFire.Play();
 	}

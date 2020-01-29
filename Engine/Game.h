@@ -45,6 +45,7 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	bool basicFireSound = true;
 	Sound basicFire;
 	Sound telFire;
 	Sound telPort;
