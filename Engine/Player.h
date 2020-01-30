@@ -50,6 +50,7 @@ private:
 	public:
 		void Spawn(const Vec2& mousePos, const Vec2& playerPos);
 		bool Explode(float dt);
+		void Exploding(float dt);
 		void Move(float dt);
 		void ClampScreen();
 		CircF GetCirc() const;
@@ -61,7 +62,8 @@ private:
 		bool active = false;
 		bool exploding = false;
 		static constexpr float speed = 300.0f;
-		static constexpr float radius = 15.0f;
+		static constexpr float radiusBase = 15.0f;
+		float radius = radiusBase;
 	};
 public:
 	void Move(float dt, bool left, bool right, bool up, bool down);
@@ -101,7 +103,7 @@ private:
 	float telRechCur = 0.0f;
 	Teleport teleport;
 	//bomb
-	static constexpr float bombRech = 1.0f; // make larger! (this small only for testing purpose)
+	static constexpr float bombRech = 10.0f; // make larger! (this small only for testing purpose)
 	float bombRechCur = 0.0f;
 	static constexpr int nBombs = 10;
 	int currentBomb = 0;

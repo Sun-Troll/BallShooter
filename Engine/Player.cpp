@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <algorithm>
+#include <assert.h>
 
 void Player::Move(float dt, bool left, bool right, bool up, bool down)
 {
@@ -130,6 +131,8 @@ void Player::UpdateTelleport(float dt)
 
 bool Player::BombFire(const Vec2& mousePos, float dt, bool fire)
 {
+	assert(currentBomb < nBombs);
+	assert(bombRechCur <= bombRech);
 	bombRechCur -= dt;
 
 	if (fire && bombRechCur <= 0.0f)
@@ -155,11 +158,12 @@ bool Player::BombUpdate(float dt)
 	for (Bomb& b : bombs)
 	{
 		b.Move(dt);
-		b.ClampScreen();
 		if (b.Explode(dt))
 		{
 			exploded = true;
 		}
+		b.Exploding(dt);
+		b.ClampScreen();
 	}
 	return exploded;
 }
@@ -204,6 +208,7 @@ void Player::DrawBombs(Graphics& gfx) const
 
 void Player::Bullet::Spawn(const Vec2& mousePos, const Vec2& playerPos)
 {
+	assert(!active);
 	pos = playerPos;
 	vel = (mousePos - playerPos).GetNormalized() * speed;
 	active = true;
@@ -255,6 +260,7 @@ void Player::Bullet::Draw(Graphics& gfx) const
 
 void Player::Teleport::Spawn(const Vec2& mousePos, const Vec2& playerPos)
 {
+	assert(!active);
 	pos = playerPos;
 	vel = (mousePos - playerPos).GetNormalized() * speed;
 	active = true;
@@ -325,6 +331,9 @@ void Player::Teleport::Draw(Graphics& gfx) const
 
 void Player::Bomb::Spawn(const Vec2& mousePos, const Vec2& playerPos)
 {
+	assert(!active);
+	assert(!exploding);
+	assert(radius == radiusBase);
 	pos = playerPos;
 	vel = (mousePos - playerPos).GetNormalized() * speed;
 	target = mousePos;
@@ -339,6 +348,23 @@ bool Player::Bomb::Explode(float dt)
 		return true;
 	}
 	return false;
+}
+
+void Player::Bomb::Exploding(float dt)
+{
+	if (active && exploding)
+	{
+		if (radius < 150.0f)
+		{
+			radius += dt * 100.0f;
+		}
+		else
+		{
+			active = false;
+			exploding = false;
+			radius = radiusBase;
+		}
+	}
 }
 
 void Player::Bomb::Move(float dt)
@@ -356,18 +382,26 @@ void Player::Bomb::ClampScreen()
 		if (pos.x < 399.0f + radius)
 		{
 			active = false;
+			exploding = false;
+			radius = radiusBase;
 		}
 		else if (pos.x > float(Graphics::ScreenWidth) - radius)
 		{
 			active = false;
+			exploding = false;
+			radius = radiusBase;
 		}
 		if (pos.y < -1.0f + radius)
 		{
 			active = false;
+			exploding = false;
+			radius = radiusBase;
 		}
 		else if (pos.y > float(Graphics::ScreenHeight) - radius)
 		{
 			active = false;
+			exploding = false;
+			radius = radiusBase;
 		}
 	}
 }
@@ -390,6 +424,13 @@ void Player::Bomb::Draw(Graphics& gfx) const
 	else if (active && exploding)
 	{
 		CircF circ = GetCirc();
+		const float outline = 3.0f;
+		do
+		{
+			gfx.DrawCircOutline(circ, outline, Colors::White);
+			circ.radius -= 3.0f * (outline + 2.0f);
+		} while (circ.radius > radiusBase);
+		circ.radius = radiusBase;
 		gfx.DrawCircle(circ, Colors::White);
 	}
 }

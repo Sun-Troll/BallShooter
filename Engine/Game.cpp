@@ -144,8 +144,8 @@ void Game::ComposeFrame()
 			gfx.PutPixel(x, y, Colors::White);
 		}
 	}
-	player.Draw(gfx);
 	player.DrawBullets(gfx);
 	player.DrawTeleport(gfx);
 	player.DrawBombs(gfx);
+	player.Draw(gfx);
 }
