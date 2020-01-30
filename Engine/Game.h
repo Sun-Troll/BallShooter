@@ -26,6 +26,7 @@
 #include "FrameTimer.h"
 #include "Player.h"
 #include "SoundEffect.h"
+#include "Enemy0.h"
 
 class Game
 {
@@ -45,6 +46,7 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	int curEnemy = 0;
 	bool basicFireSound = true;
 	Sound basicFire;
 	Sound telFire;
@@ -53,5 +55,6 @@ private:
 	Sound bombExplode;
 	FrameTimer ft;
 	Player player;
+	Enemy0 enemy0;
 	/********************************/
 };

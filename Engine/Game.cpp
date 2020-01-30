@@ -135,6 +135,16 @@ void Game::UpdateModel()
 	{
 		bombExplode.Play();
 	}
+
+	// enemy0
+
+	if (curEnemy == 0)
+	{
+		if (enemy0.Spawn(dt))
+		{
+			//spawn sound
+		}
+	}
 }
 
 void Game::ComposeFrame()
@@ -146,6 +156,12 @@ void Game::ComposeFrame()
 			gfx.PutPixel(x, y, Colors::White);
 		}
 	}
+
+	if (curEnemy == 0)
+	{
+		enemy0.Draw(gfx);
+	}
+
 	player.DrawBullets(gfx);
 	player.DrawTeleport(gfx);
 	player.DrawBombs(gfx);
