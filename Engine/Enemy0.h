@@ -14,6 +14,7 @@ public:
 	};
 public:
 	bool Spawn(float dt);
+	void DamagePlayer(Player& player, float dt) const;
 	CircF GetCirc() const;
 	void Draw(Graphics& gfx) const;
 private:
@@ -26,4 +27,5 @@ private:
 	static constexpr float radius = 50.0f;
 	static constexpr int hpMax = 1000000;
 	int hp = hpMax;
+	static constexpr float touchDamage = 3000.0f;
 };

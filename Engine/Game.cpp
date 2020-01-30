@@ -43,106 +43,115 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	float dt = ft.FrameDuration();
-
-	while (!wnd.kbd.KeyIsEmpty())
+	if (!gameOver)
 	{
-		const Keyboard::Event e = wnd.kbd.ReadKey();
-		if (e.IsPress())
+		float dt = ft.FrameDuration();
+
+		while (!wnd.kbd.KeyIsEmpty())
 		{
-			if (e.GetCode() == 'M')
+			const Keyboard::Event e = wnd.kbd.ReadKey();
+			if (e.IsPress())
 			{
-				basicFireSound = !basicFireSound;
+				if (e.GetCode() == 'M')
+				{
+					basicFireSound = !basicFireSound;
+				}
 			}
 		}
-	}
 
-	bool slow = false;
-	bool left = false;
-	bool right = false;
-	bool up = false;
-	bool down = false;
-	bool moving = false;
-	bool fireTeleport = false;
-	Vec2 fTelMousePos{ 0.f, 0.f };
-	bool fireBomb = false;
-	Vec2 fBomMousePos{ 0.f, 0.f };
-	if (wnd.kbd.KeyIsPressed(VK_SPACE))
-	{
-		slow = true;
-	}
-	if (wnd.kbd.KeyIsPressed('A'))
-	{
-		left = true;
-		moving = true;
-	}
-	else if (wnd.kbd.KeyIsPressed('D'))
-	{
-		right = true;
-		moving = true;
-	}
-	if (wnd.kbd.KeyIsPressed('W'))
-	{
-		up = true;
-		moving = true;
-	}
-	else if (wnd.kbd.KeyIsPressed('S'))
-	{
-		down = true;
-		moving = true;
-	}
-	while (!wnd.mouse.IsEmpty())
-	{
-		const Mouse::Event e = wnd.mouse.Read();
-		if (e.GetType() == Mouse::Event::Type::LPress)
+		bool slow = false;
+		bool left = false;
+		bool right = false;
+		bool up = false;
+		bool down = false;
+		bool moving = false;
+		bool fireTeleport = false;
+		Vec2 fTelMousePos{ 0.f, 0.f };
+		bool fireBomb = false;
+		Vec2 fBomMousePos{ 0.f, 0.f };
+		if (wnd.kbd.KeyIsPressed(VK_SPACE))
 		{
-			fireTeleport = true;
-			fTelMousePos = e.GetPos();
+			slow = true;
 		}
-		if (e.GetType() == Mouse::Event::Type::RPress)
+		if (wnd.kbd.KeyIsPressed('A'))
 		{
-			fireBomb = true;
-			fBomMousePos = e.GetPos();
+			left = true;
+			moving = true;
 		}
-	}
-	
-	if (player.SlowDown(dt, slow))
-	{
-		dt /= 4.0f;
-	}
-	player.Move(dt, left, right, up, down);
-	player.ClampScreen();
-	if (player.Fire(wnd.mouse.GetPos(), dt, moving) && basicFireSound)
-	{
-		basicFire.Play();
-	}
-	player.UpdateBullets(dt);
-	const Player::TeleportState telState = player.TeleportFirePort(fTelMousePos, dt, fireTeleport);
-	if (telState == Player::TeleportState::Fire)
-	{
-		telFire.Play();
-	}
-	else if (telState == Player::TeleportState::Port)
-	{
-		telPort.Play();
-	}
-	player.UpdateTelleport(dt);
-	if (player.BombFire(fBomMousePos, dt, fireBomb))
-	{
-		bombFire.Play();
-	}
-	if (player.BombUpdate(dt))
-	{
-		bombExplode.Play();
-	}
-
-	// enemy0
-
-	if (curEnemy == 0)
-	{
-		if (enemy0.Spawn(dt))
+		else if (wnd.kbd.KeyIsPressed('D'))
 		{
-			//spawn sound
+			right = true;
+			moving = true;
+		}
+		if (wnd.kbd.KeyIsPressed('W'))
+		{
+			up = true;
+			moving = true;
+		}
+		else if (wnd.kbd.KeyIsPressed('S'))
+		{
+			down = true;
+			moving = true;
+		}
+		while (!wnd.mouse.IsEmpty())
+		{
+			const Mouse::Event e = wnd.mouse.Read();
+			if (e.GetType() == Mouse::Event::Type::LPress)
+			{
+				fireTeleport = true;
+				fTelMousePos = e.GetPos();
+			}
+			if (e.GetType() == Mouse::Event::Type::RPress)
+			{
+				fireBomb = true;
+				fBomMousePos = e.GetPos();
+			}
+		}
+
+		if (player.SlowDown(dt, slow))
+		{
+			dt /= 4.0f;
+		}
+		player.Move(dt, left, right, up, down);
+		player.ClampScreen();
+		if (player.Fire(wnd.mouse.GetPos(), dt, moving) && basicFireSound)
+		{
+			basicFire.Play();
+		}
+		player.UpdateBullets(dt);
+		const Player::TeleportState telState = player.TeleportFirePort(fTelMousePos, dt, fireTeleport);
+		if (telState == Player::TeleportState::Fire)
+		{
+			telFire.Play();
+		}
+		else if (telState == Player::TeleportState::Port)
+		{
+			telPort.Play();
+		}
+		player.UpdateTelleport(dt);
+		if (player.BombFire(fBomMousePos, dt, fireBomb))
+		{
+			bombFire.Play();
+		}
+		if (player.BombUpdate(dt))
+		{
+			bombExplode.Play();
+		}
+
+		// enemy0
+
+		if (curEnemy == 0)
+		{
+			if (enemy0.Spawn(dt))
+			{
+				//spawn sound
+			}
+			enemy0.DamagePlayer(player, dt);
+		}
+
+		if (player.isDead())
+		{
+			gameOver = true;
 		}
 	}
 }

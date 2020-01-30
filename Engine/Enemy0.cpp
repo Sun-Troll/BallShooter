@@ -14,6 +14,17 @@ bool Enemy0::Spawn(float dt)
 	return false;
 }
 
+void Enemy0::DamagePlayer(Player& player, float dt) const
+{
+	if (player.GetCirc().IsOverlapping(GetCirc()))
+	{
+		if (curPhase == Phase::First)
+		{
+			player.TakeDamage(int(touchDamage * dt));
+		}
+	}
+}
+
 CircF Enemy0::GetCirc() const
 {
 	return CircF(pos, radius);

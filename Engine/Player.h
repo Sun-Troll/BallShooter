@@ -76,6 +76,8 @@ public:
 	bool BombFire(const Vec2& mousePos, float dt, bool fire);
 	bool BombUpdate(float dt);
 	CircF GetCirc() const;
+	bool isDead() const;
+	void TakeDamage(int damage);
 	void Draw(Graphics& gfx) const;
 	void DrawBullets(Graphics& gfx) const;
 	void DrawTeleport(Graphics& gfx) const;

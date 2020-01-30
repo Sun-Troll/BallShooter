@@ -173,6 +173,16 @@ CircF Player::GetCirc() const
 	return CircF(pos, radius);
 }
 
+bool Player::isDead() const
+{
+	return hp <= 0;
+}
+
+void Player::TakeDamage(int damage)
+{
+	hp -= damage;
+}
+
 void Player::Draw(Graphics& gfx) const
 {
 	const unsigned char color = (std::max(hp, 0) * 255 / hpMax);
