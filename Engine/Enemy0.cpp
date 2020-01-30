@@ -56,7 +56,7 @@ void Enemy0::BulletHit(Player& player, int index)
 	assert(curPhase != Phase::Dead);
 	assert(index < player.GetNBullets());
 	assert(player.GetActiveBullet(index));
-	if (player.GetCircBullet(index).IsOverlapping(GetCirc()))
+	if (curPhase != Phase::Waiting && player.GetCircBullet(index).IsOverlapping(GetCirc()))
 	{
 		hp -= player.DealBulletDamage(index);
 	}
