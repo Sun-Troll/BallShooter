@@ -173,6 +173,29 @@ CircF Player::GetCirc() const
 	return CircF(pos, radius);
 }
 
+int Player::GetNBullets() const
+{
+	return nBullets;
+}
+
+bool Player::GetActiveBullet(int index) const
+{
+	assert(index < nBullets);
+	return bullets[index].GetActive();
+}
+
+int Player::DealBulletDamage(int index)
+{
+	assert(index < nBullets);
+	assert(bullets[index].GetActive());
+	return bullets[index].Hit();
+}
+
+CircF Player::GetCircBullet(int index) const
+{
+	return CircF(bullets[index].GetCirc());
+}
+
 bool Player::isDead() const
 {
 	return hp <= 0;
@@ -255,9 +278,21 @@ void Player::Bullet::ClampScreen()
 	}
 }
 
+int Player::Bullet::Hit()
+{
+	assert(active);
+	active = false;
+	return damage;
+}
+
 CircF Player::Bullet::GetCirc() const
 {
 	return CircF(pos, radius);
+}
+
+bool Player::Bullet::GetActive() const
+{
+	return active;
 }
 
 void Player::Bullet::Draw(Graphics& gfx) const

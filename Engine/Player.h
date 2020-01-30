@@ -18,7 +18,9 @@ private:
 		void Spawn(const Vec2& mousePos, const Vec2& playerPos);
 		void Move(float dt);
 		void ClampScreen();
+		int Hit();
 		CircF GetCirc() const;
+		bool GetActive() const;
 		void Draw(Graphics& gfx) const;
 	private:
 		Vec2 pos{ float(Graphics::ScreenWidth) / 2.0f + 200.0f, float(Graphics::ScreenHeight) / 2.0f };
@@ -26,6 +28,7 @@ private:
 		bool active = false;
 		static constexpr float speed = 1000.0f;
 		static constexpr float radius = 5.0f;
+		static constexpr int damage = 10000; //test make smaller
 	};
 	class Teleport
 	{
@@ -76,6 +79,10 @@ public:
 	bool BombFire(const Vec2& mousePos, float dt, bool fire);
 	bool BombUpdate(float dt);
 	CircF GetCirc() const;
+	int GetNBullets() const;
+	bool GetActiveBullet(int index) const;
+	int DealBulletDamage(int index);
+	CircF GetCircBullet(int index) const;
 	bool isDead() const;
 	void TakeDamage(int damage);
 	void Draw(Graphics& gfx) const;
@@ -105,7 +112,7 @@ private:
 	float telRechCur = 0.0f;
 	Teleport teleport;
 	//bomb
-	static constexpr float bombRech = 10.0f; // make larger! (this small only for testing purpose)
+	static constexpr float bombRech = 10.0f;
 	float bombRechCur = 0.0f;
 	static constexpr int nBombs = 10;
 	int currentBomb = 0;

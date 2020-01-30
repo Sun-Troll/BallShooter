@@ -14,7 +14,10 @@ public:
 	};
 public:
 	bool Spawn(float dt);
+	bool PhaseSwitch();
+	bool Die(); //call last!
 	void DamagePlayer(Player& player, float dt) const;
+	void BulletHit(Player& player, int index);
 	CircF GetCirc() const;
 	void Draw(Graphics& gfx) const;
 private:

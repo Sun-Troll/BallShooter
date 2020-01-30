@@ -147,6 +147,23 @@ void Game::UpdateModel()
 				//spawn sound
 			}
 			enemy0.DamagePlayer(player, dt);
+
+			for (int i = 0; i < player.GetNBullets(); i++)
+			{
+				if (player.GetActiveBullet(i))
+				{
+					enemy0.BulletHit(player, i);
+				}
+			}
+			if (enemy0.PhaseSwitch())
+			{
+				// play phase switch sound
+			}
+			if (enemy0.Die())
+			{
+				// play phase switch sound
+				curEnemy++;
+			}
 		}
 
 		if (player.isDead())
