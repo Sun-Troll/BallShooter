@@ -29,7 +29,10 @@ Game::Game(MainWindow& wnd)
 	telFire(L"Sounds\\telFire.wav"),
 	telPort(L"Sounds\\telPort.wav"),
 	bombFire(L"Sounds\\bombFire.wav"),
-	bombExplode(L"Sounds\\bombExplode.wav")
+	bombExplode(L"Sounds\\bombExplode.wav"),
+	enemy0Spawn(L"Sounds\\enemy0Spawn.wav"),
+	enemy0PhaseSwitch(L"Sounds\\enemy0PhaseSwitch.wav"),
+	enemy0Die(L"Sounds\\enemy0Die.wav")
 {
 }
 
@@ -144,7 +147,7 @@ void Game::UpdateModel()
 		{
 			if (enemy0.Spawn(dt))
 			{
-				//spawn sound
+				enemy0Spawn.Play();
 			}
 			enemy0.DamagePlayer(player, dt);
 
@@ -157,11 +160,11 @@ void Game::UpdateModel()
 			}
 			if (enemy0.PhaseSwitch())
 			{
-				// play phase switch sound
+				enemy0PhaseSwitch.Play();
 			}
 			if (enemy0.Die())
 			{
-				// play phase switch sound
+				enemy0Die.Play();
 				curEnemy++;
 			}
 		}

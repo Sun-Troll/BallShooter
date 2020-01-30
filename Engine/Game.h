@@ -53,6 +53,9 @@ private:
 	Sound telPort;
 	Sound bombFire;
 	Sound bombExplode;
+	Sound enemy0Spawn;
+	Sound enemy0PhaseSwitch;
+	Sound enemy0Die;
 	FrameTimer ft;
 	Player player;
 	Enemy0 enemy0;
