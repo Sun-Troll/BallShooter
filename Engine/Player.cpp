@@ -342,7 +342,7 @@ void Player::Bomb::Spawn(const Vec2& mousePos, const Vec2& playerPos)
 
 bool Player::Bomb::Explode(float dt)
 {
-	if (active && (pos + vel * dt - target).GetLengthSq() > (pos - target).GetLengthSq())
+	if (active && (pos + vel * dt - target).GetLengthSq() > (pos - target).GetLengthSq() && !exploding)
 	{
 		exploding = true;
 		return true;

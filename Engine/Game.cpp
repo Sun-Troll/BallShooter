@@ -27,7 +27,9 @@ Game::Game(MainWindow& wnd)
 	gfx(wnd),
 	basicFire(L"Sounds\\basicFire.wav"),
 	telFire(L"Sounds\\telFire.wav"),
-	telPort(L"Sounds\\telPort.wav")
+	telPort(L"Sounds\\telPort.wav"),
+	bombFire(L"Sounds\\bombFire.wav"),
+	bombExplode(L"Sounds\\bombExplode.wav")
 {
 }
 
@@ -127,11 +129,11 @@ void Game::UpdateModel()
 	player.UpdateTelleport(dt);
 	if (player.BombFire(fBomMousePos, dt, fireBomb))
 	{
-		//add fire bomb sound
+		bombFire.Play();
 	}
 	if (player.BombUpdate(dt))
 	{
-		//add explode bomb sound
+		bombExplode.Play();
 	}
 }
 

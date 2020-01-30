@@ -49,6 +49,8 @@ private:
 	Sound basicFire;
 	Sound telFire;
 	Sound telPort;
+	Sound bombFire;
+	Sound bombExplode;
 	FrameTimer ft;
 	Player player;
 	/********************************/
