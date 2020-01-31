@@ -56,6 +56,7 @@ private:
 	Sound enemy0Spawn;
 	Sound enemy0PhaseSwitch;
 	Sound enemy0Die;
+	Sound enemy0FireBasic;
 	FrameTimer ft;
 	Player player;
 	Enemy0 enemy0;

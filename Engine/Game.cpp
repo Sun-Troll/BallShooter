@@ -32,7 +32,8 @@ Game::Game(MainWindow& wnd)
 	bombExplode(L"Sounds\\bombExplode.wav"),
 	enemy0Spawn(L"Sounds\\enemy0Spawn.wav"),
 	enemy0PhaseSwitch(L"Sounds\\enemy0PhaseSwitch.wav"),
-	enemy0Die(L"Sounds\\enemy0Die.wav")
+	enemy0Die(L"Sounds\\enemy0Die.wav"),
+	enemy0FireBasic(L"Sounds\\enemy0FireBasic.wav")
 {
 }
 
@@ -152,7 +153,7 @@ void Game::UpdateModel()
 			enemy0.DamagePlayer(player, dt);
 			if (enemy0.FireBasic(dt))
 			{
-				//play enemy0 fireBasic sound
+				enemy0FireBasic.Play();
 			}
 			enemy0.UpdateBulletsBasic(dt);
 
