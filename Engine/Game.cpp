@@ -158,6 +158,13 @@ void Game::UpdateModel()
 					enemy0.BulletHit(player, i);
 				}
 			}
+			for (int i = 0; i < player.GetNBombs(); i++)
+			{
+				if (player.GetExplodingBomb(i))
+				{
+					enemy0.BombHit(player, i, dt);
+				}
+			}
 			if (enemy0.PhaseSwitch())
 			{
 				enemy0PhaseSwitch.Play();

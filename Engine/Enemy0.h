@@ -18,6 +18,7 @@ public:
 	bool Die(); //call last!
 	void DamagePlayer(Player& player, float dt) const;
 	void BulletHit(Player& player, int index);
+	void BombHit(Player& player, int index, float dt);
 	CircF GetCirc() const;
 	void Draw(Graphics& gfx) const;
 private:

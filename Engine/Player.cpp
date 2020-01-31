@@ -196,6 +196,29 @@ CircF Player::GetCircBullet(int index) const
 	return CircF(bullets[index].GetCirc());
 }
 
+int Player::GetNBombs() const
+{
+	return nBombs;
+}
+
+bool Player::GetExplodingBomb(int index) const
+{
+	assert(index < nBombs);
+	return bombs[index].GetExploding();
+}
+
+float Player::DealBombDamage(int index) const
+{
+	assert(index < nBombs);
+	assert(bombs[index].GetExploding());
+	return bombs[index].GetDamage();
+}
+
+CircF Player::GetCircBomb(int index) const
+{
+	return CircF(bombs[index].GetCirc());
+}
+
 bool Player::isDead() const
 {
 	return hp <= 0;
@@ -454,6 +477,17 @@ void Player::Bomb::ClampScreen()
 CircF Player::Bomb::GetCirc() const
 {
 	return CircF(pos, radius);
+}
+
+bool Player::Bomb::GetExploding() const
+{
+	return exploding;
+}
+
+float Player::Bomb::GetDamage() const
+{
+	assert(exploding);
+	return damage;
 }
 
 void Player::Bomb::Draw(Graphics& gfx) const

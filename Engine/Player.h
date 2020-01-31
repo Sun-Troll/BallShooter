@@ -57,6 +57,8 @@ private:
 		void Move(float dt);
 		void ClampScreen();
 		CircF GetCirc() const;
+		bool GetExploding() const;
+		float GetDamage() const;
 		void Draw(Graphics& gfx) const;
 	private:
 		Vec2 pos{ float(Graphics::ScreenWidth) / 2.0f + 200.0f, float(Graphics::ScreenHeight) / 2.0f };
@@ -67,6 +69,7 @@ private:
 		static constexpr float speed = 300.0f;
 		static constexpr float radiusBase = 15.0f;
 		float radius = radiusBase;
+		static constexpr float damage = 250000.0f; //test make smaller
 	};
 public:
 	void Move(float dt, bool left, bool right, bool up, bool down);
@@ -83,6 +86,10 @@ public:
 	bool GetActiveBullet(int index) const;
 	int DealBulletDamage(int index);
 	CircF GetCircBullet(int index) const;
+	int GetNBombs() const;
+	bool GetExplodingBomb(int index) const;
+	float DealBombDamage(int index) const;
+	CircF GetCircBomb(int index) const;
 	bool isDead() const;
 	void TakeDamage(int damage);
 	void Draw(Graphics& gfx) const;

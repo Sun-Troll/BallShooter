@@ -62,6 +62,17 @@ void Enemy0::BulletHit(Player& player, int index)
 	}
 }
 
+void Enemy0::BombHit(Player& player, int index, float dt)
+{
+	assert(curPhase != Phase::Dead);
+	assert(index < player.GetNBombs());
+	assert(player.GetExplodingBomb(index));
+	if (curPhase != Phase::Waiting && player.GetCircBomb(index).IsOverlapping(GetCirc()))
+	{
+		hp -= int(player.DealBombDamage(index) * dt);
+	}
+}
+
 CircF Enemy0::GetCirc() const
 {
 	assert(curPhase != Phase::Dead);
