@@ -44,7 +44,7 @@ void Enemy0::DamagePlayer(Player& player, float dt) const
 	assert(curPhase != Phase::Dead);
 	if (player.GetCirc().IsOverlapping(GetCirc()))
 	{
-		if (curPhase == Phase::First)
+		if (curPhase == Phase::First || curPhase == Phase::Second)
 		{
 			player.TakeDamage(int(touchDamage * dt));
 		}
@@ -79,12 +79,18 @@ bool Enemy0::FireBasic(float dt)
 	if (curPhase == Phase::First || curPhase == Phase::Second)
 	{
 		fireTimeBasic -= dt;
-		//change target
-
+		targetBasic += pi * dt / 2.0f;
 		if (fireTimeBasic <= 0.0f)
 		{
-			const Vec2 targetPos{ 0.0f, 0.0f }; //calculate based on target
-			fireTimeBasic = fireRateBasic;
+			const Vec2 targetPos{ std::sin(targetBasic), std::cos(targetBasic) }; //calculate based on target
+			if (curPhase == Phase::First)
+			{
+				fireTimeBasic = fireRateBasic * (float(hp) / float(hpMax));
+			}
+			else
+			{
+				fireTimeBasic = fireRateBasic / 2.0f;
+			}
 			bulletsBasic[currentBulletBasic].Spawn(targetPos, pos);
 			if (currentBulletBasic < nBulletsBasic - 1)
 			{
@@ -159,7 +165,7 @@ void Enemy0::BulletBasic::Spawn(const Vec2 & targetPos, const Vec2 & enemy0Pos)
 {
 	assert(!active);
 	pos = enemy0Pos;
-	vel = (targetPos - enemy0Pos).GetNormalized() * speed;
+	vel = (targetPos) * speed;
 	active = true;
 }
 
