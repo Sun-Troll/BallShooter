@@ -150,7 +150,10 @@ void Game::UpdateModel()
 				enemy0Spawn.Play();
 			}
 			enemy0.DamagePlayer(player, dt);
-			enemy0.FireBasic(dt);
+			if (enemy0.FireBasic(dt))
+			{
+				//play enemy0 fireBasic sound
+			}
 			enemy0.UpdateBulletsBasic(dt);
 
 			for (int i = 0; i < player.GetNBullets(); i++)
