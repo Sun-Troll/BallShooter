@@ -150,6 +150,8 @@ void Game::UpdateModel()
 				enemy0Spawn.Play();
 			}
 			enemy0.DamagePlayer(player, dt);
+			enemy0.FireBasic(dt);
+			enemy0.UpdateBulletsBasic(dt);
 
 			for (int i = 0; i < player.GetNBullets(); i++)
 			{
@@ -165,6 +167,7 @@ void Game::UpdateModel()
 					enemy0.BombHit(player, i, dt);
 				}
 			}
+
 			if (enemy0.PhaseSwitch())
 			{
 				enemy0PhaseSwitch.Play();
@@ -195,6 +198,7 @@ void Game::ComposeFrame()
 
 	if (curEnemy == 0)
 	{
+		enemy0.DrawBulletsBasic(gfx);
 		enemy0.Draw(gfx);
 	}
 

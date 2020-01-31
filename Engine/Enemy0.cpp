@@ -73,6 +73,46 @@ void Enemy0::BombHit(Player& player, int index, float dt)
 	}
 }
 
+bool Enemy0::FireBasic(float dt)
+{
+	assert(curPhase != Phase::Dead);
+	if (curPhase == Phase::First || curPhase == Phase::Second)
+	{
+		fireTimeBasic -= dt;
+		//change target
+
+		if (fireTimeBasic <= 0.0f)
+		{
+			const Vec2 targetPos{ 0.0f, 0.0f }; //calculate based on target
+			fireTimeBasic = fireRateBasic;
+			bulletsBasic[currentBulletBasic].Spawn(targetPos, pos);
+			if (currentBulletBasic < nBulletsBasic - 1)
+			{
+				currentBulletBasic++;
+			}
+			else
+			{
+				currentBulletBasic = 0;
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+void Enemy0::UpdateBulletsBasic(float dt)
+{
+	assert(curPhase != Phase::Dead);
+	if (curPhase == Phase::First || curPhase == Phase::Second)
+	{
+		for (BulletBasic& b : bulletsBasic)
+		{
+			b.Move(dt);
+			b.ClampScreen();
+		}
+	}
+}
+
 CircF Enemy0::GetCirc() const
 {
 	assert(curPhase != Phase::Dead);
@@ -100,5 +140,69 @@ void Enemy0::Draw(Graphics& gfx) const
 		circ.radius -= outline + padding;
 		gfx.DrawCircle(circ, Colors::Green);
 		break;
+	}
+}
+
+void Enemy0::DrawBulletsBasic(Graphics& gfx) const
+{
+	assert(curPhase != Phase::Dead);
+	if (curPhase == Phase::First || curPhase == Phase::Second)
+	{
+		for (const BulletBasic& b : bulletsBasic)
+		{
+			b.Draw(gfx);
+		}
+	}
+}
+
+void Enemy0::BulletBasic::Spawn(const Vec2 & targetPos, const Vec2 & enemy0Pos)
+{
+	assert(!active);
+	pos = enemy0Pos;
+	vel = (targetPos - enemy0Pos).GetNormalized() * speed;
+	active = true;
+}
+
+void Enemy0::BulletBasic::Move(float dt)
+{
+	if (active)
+	{
+		pos += vel * dt;
+	}
+}
+
+void Enemy0::BulletBasic::ClampScreen()
+{
+	if (active)
+	{
+		if (pos.x < 399.0f + radius)
+		{
+			active = false;
+		}
+		else if (pos.x > float(Graphics::ScreenWidth) - radius)
+		{
+			active = false;
+		}
+		if (pos.y < -1.0f + radius)
+		{
+			active = false;
+		}
+		else if (pos.y > float(Graphics::ScreenHeight) - radius)
+		{
+			active = false;
+		}
+	}
+}
+
+CircF Enemy0::BulletBasic::GetCirc() const
+{
+	return CircF(pos, radius);
+}
+
+void Enemy0::BulletBasic::Draw(Graphics & gfx) const
+{
+	if (active)
+	{
+		gfx.DrawCircle(GetCirc(), Colors::Red);
 	}
 }

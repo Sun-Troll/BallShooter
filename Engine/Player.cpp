@@ -322,7 +322,7 @@ void Player::Bullet::Draw(Graphics& gfx) const
 {
 	if (active)
 	{
-		gfx.DrawCircle(GetCirc(), Color{ 255, 255, 255 });
+		gfx.DrawCircle(GetCirc(), Colors::White);
 	}
 }
 
