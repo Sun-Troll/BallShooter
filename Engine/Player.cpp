@@ -173,6 +173,11 @@ CircF Player::GetCirc() const
 	return CircF(pos, radius);
 }
 
+Vec2 Player::GetPos() const
+{
+	return pos;
+}
+
 int Player::GetNBullets() const
 {
 	return nBullets;

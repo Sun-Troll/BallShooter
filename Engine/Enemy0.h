@@ -21,6 +21,7 @@ private:
 		void ClampScreen();
 		int Hit();
 		CircF GetCirc() const;
+		bool GetActive() const;
 		void Draw(Graphics& gfx) const;
 	private:
 		Vec2 pos{ float(Graphics::ScreenWidth) / 2.0f + 200.0f, float(Graphics::ScreenHeight) / 2.0f };
@@ -28,7 +29,25 @@ private:
 		bool active = false;
 		static constexpr float speed = 200.0f;
 		static constexpr float radius = 7.0f;
-		static constexpr int damage = 1000; //test make smaller
+		static constexpr int damage = 1000;
+	};
+	class BulletAim
+	{
+	public:
+		void Spawn(const Vec2& playerPos, const Vec2& enemy0Pos);
+		void Move(float dt);
+		void ClampScreen();
+		int Hit();
+		CircF GetCirc() const;
+		bool GetActive() const;
+		void Draw(Graphics& gfx) const;
+	private:
+		Vec2 pos{ float(Graphics::ScreenWidth) / 2.0f + 200.0f, float(Graphics::ScreenHeight) / 2.0f };
+		Vec2 vel{ 0.0f, 0.0f };
+		bool active = false;
+		static constexpr float speed = 400.0f;
+		static constexpr float radius = 9.0f;
+		static constexpr int damage = 2000;
 	};
 public:
 	bool Spawn(float dt);
@@ -37,11 +56,16 @@ public:
 	void DamagePlayer(Player& player, float dt) const;
 	void BulletHit(Player& player, int index);
 	void BombHit(Player& player, int index, float dt);
-	bool FireBasic(float dt);
+	bool FireBulletBasic(float dt);
 	void UpdateBulletsBasic(float dt);
+	void BulletBasicHit(Player& player);
+	bool FireBulletAim(const Vec2& playerPos, float dt);
+	void UpdateBulletsAim(float dt);
+	void BulletAimHit(Player& player);
 	CircF GetCirc() const;
 	void Draw(Graphics& gfx) const;
 	void DrawBulletsBasic(Graphics& gfx) const;
+	void DrawBulletsAim(Graphics& gfx) const;
 private:
 	float spawnTimer = -10.0f;
 	Phase curPhase = Phase::Waiting;
@@ -59,4 +83,12 @@ private:
 	int currentBulletBasic = 0;
 	float targetBasic = 0.0f;
 	BulletBasic bulletsBasic[nBulletsBasic];
+	//bulletAim
+	static constexpr float fireRateAim = 0.6f;
+	float fireTimeAim = 0.0f;
+	static constexpr int nBulletsAim = 30;
+	int currentBulletAim = 0;
+	static constexpr int RapidFireSalvo = 4;
+	int curSalvo = 0;
+	BulletAim bulletsAim[nBulletsAim];
 };

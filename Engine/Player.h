@@ -28,7 +28,7 @@ private:
 		bool active = false;
 		static constexpr float speed = 1000.0f;
 		static constexpr float radius = 5.0f;
-		static constexpr int damage = 10000; //test make smaller
+		static constexpr int damage = 1000;
 	};
 	class Teleport
 	{
@@ -69,7 +69,7 @@ private:
 		static constexpr float speed = 300.0f;
 		static constexpr float radiusBase = 15.0f;
 		float radius = radiusBase;
-		static constexpr float damage = 250000.0f; //test make smaller
+		static constexpr float damage = 100000.0f;
 	};
 public:
 	void Move(float dt, bool left, bool right, bool up, bool down);
@@ -82,6 +82,7 @@ public:
 	bool BombFire(const Vec2& mousePos, float dt, bool fire);
 	bool BombUpdate(float dt);
 	CircF GetCirc() const;
+	Vec2 GetPos() const;
 	int GetNBullets() const;
 	bool GetActiveBullet(int index) const;
 	int DealBulletDamage(int index);

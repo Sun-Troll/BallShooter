@@ -151,11 +151,18 @@ void Game::UpdateModel()
 				enemy0Spawn.Play();
 			}
 			enemy0.DamagePlayer(player, dt);
-			if (enemy0.FireBasic(dt))
+			if (enemy0.FireBulletBasic(dt))
 			{
 				enemy0FireBasic.Play();
 			}
 			enemy0.UpdateBulletsBasic(dt);
+			enemy0.BulletBasicHit(player);
+			if (enemy0.FireBulletAim(player.GetPos(), dt))
+			{
+				//play enemy0 fire aim sound
+			}
+			enemy0.UpdateBulletsAim(dt);
+			enemy0.BulletAimHit(player);
 
 			for (int i = 0; i < player.GetNBullets(); i++)
 			{
@@ -203,6 +210,7 @@ void Game::ComposeFrame()
 	if (curEnemy == 0)
 	{
 		enemy0.DrawBulletsBasic(gfx);
+		enemy0.DrawBulletsAim(gfx);
 		enemy0.Draw(gfx);
 	}
 
