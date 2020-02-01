@@ -170,7 +170,7 @@ bool Enemy0::FireBulletAim(const Vec2& playerPos, float dt)
 				}
 				else
 				{
-					curSalvo = RapidFireSalvo;
+					curSalvo = RapidFireSalvo - (hp * 10 / hpMax);
 					fireTimeAim = fireRateAim;
 				}
 			}

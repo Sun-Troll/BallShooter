@@ -84,11 +84,11 @@ private:
 	float targetBasic = 0.0f;
 	BulletBasic bulletsBasic[nBulletsBasic];
 	//bulletAim
-	static constexpr float fireRateAim = 0.6f;
+	static constexpr float fireRateAim = 1.0f;
 	float fireTimeAim = 0.0f;
 	static constexpr int nBulletsAim = 30;
 	int currentBulletAim = 0;
-	static constexpr int RapidFireSalvo = 4;
+	static constexpr int RapidFireSalvo = 5;
 	int curSalvo = 0;
 	BulletAim bulletsAim[nBulletsAim];
 };

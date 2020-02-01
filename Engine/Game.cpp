@@ -33,7 +33,8 @@ Game::Game(MainWindow& wnd)
 	enemy0Spawn(L"Sounds\\enemy0Spawn.wav"),
 	enemy0PhaseSwitch(L"Sounds\\enemy0PhaseSwitch.wav"),
 	enemy0Die(L"Sounds\\enemy0Die.wav"),
-	enemy0FireBasic(L"Sounds\\enemy0FireBasic.wav")
+	enemy0FireBasic(L"Sounds\\enemy0FireBasic.wav"),
+	enemy0FireAim(L"Sounds\\enemy0FireAim.wav")
 {
 }
 
@@ -159,7 +160,7 @@ void Game::UpdateModel()
 			enemy0.BulletBasicHit(player);
 			if (enemy0.FireBulletAim(player.GetPos(), dt))
 			{
-				//play enemy0 fire aim sound
+				enemy0FireAim.Play();
 			}
 			enemy0.UpdateBulletsAim(dt);
 			enemy0.BulletAimHit(player);
