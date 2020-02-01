@@ -82,7 +82,7 @@ bool Enemy0::FireBasic(float dt)
 		targetBasic += pi * dt / 2.0f;
 		if (fireTimeBasic <= 0.0f)
 		{
-			const Vec2 targetPos{ std::sin(targetBasic), std::cos(targetBasic) }; //calculate based on target
+			const Vec2 targetPos{ std::sin(targetBasic), std::cos(targetBasic) };
 			if (curPhase == Phase::First)
 			{
 				fireTimeBasic = fireRateBasic * (float(hp) / float(hpMax));
@@ -99,6 +99,25 @@ bool Enemy0::FireBasic(float dt)
 			else
 			{
 				currentBulletBasic = 0;
+			}
+			if (curPhase == Phase::Second)
+			{
+				const int aditFireDirs = 4;
+				float aditTargetsPos = targetBasic;
+				for (int a = 0; a < aditFireDirs; a++)
+				{
+					aditTargetsPos += 2.0f * pi / float(aditFireDirs + 1);
+					const Vec2 targetPos{ std::sin(aditTargetsPos), std::cos(aditTargetsPos) };
+					bulletsBasic[currentBulletBasic].Spawn(targetPos, pos);
+					if (currentBulletBasic < nBulletsBasic - 1)
+					{
+						currentBulletBasic++;
+					}
+					else
+					{
+						currentBulletBasic = 0;
+					}
+				}
 			}
 			return true;
 		}

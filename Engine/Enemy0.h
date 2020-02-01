@@ -26,7 +26,7 @@ private:
 		Vec2 pos{ float(Graphics::ScreenWidth) / 2.0f + 200.0f, float(Graphics::ScreenHeight) / 2.0f };
 		Vec2 vel{ 0.0f, 0.0f };
 		bool active = false;
-		static constexpr float speed = 400.0f;
+		static constexpr float speed = 200.0f;
 		static constexpr float radius = 7.0f;
 		static constexpr int damage = 1000; //test make smaller
 	};
@@ -53,9 +53,9 @@ private:
 	int hp = hpMax;
 	static constexpr float touchDamage = 3000.0f;
 	//bulletBasic
-	static constexpr float fireRateBasic = 0.2f;
+	static constexpr float fireRateBasic = 0.3f;
 	float fireTimeBasic = 0.0f;
-	static constexpr int nBulletsBasic = 100;
+	static constexpr int nBulletsBasic = 200;
 	int currentBulletBasic = 0;
 	float targetBasic = 0.0f;
 	BulletBasic bulletsBasic[nBulletsBasic];
