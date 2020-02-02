@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Player.h"
+#include <random>
 
 class Enemy0
 {
@@ -28,7 +29,7 @@ private:
 		Vec2 vel{ 0.0f, 0.0f };
 		bool active = false;
 		static constexpr float speed = 200.0f;
-		static constexpr float radius = 7.0f;
+		static constexpr float radius = 6.0f;
 		static constexpr int damage = 1000;
 	};
 	class BulletAim
@@ -46,8 +47,26 @@ private:
 		Vec2 vel{ 0.0f, 0.0f };
 		bool active = false;
 		static constexpr float speed = 400.0f;
-		static constexpr float radius = 9.0f;
+		static constexpr float radius = 8.0f;
 		static constexpr int damage = 2000;
+	};
+	class BulletRandom
+	{
+	public:
+		void Spawn(const Vec2& velDir, const Vec2& enemy0Pos);
+		void Move(float dt);
+		void ClampScreen();
+		int Hit();
+		CircF GetCirc() const;
+		bool GetActive() const;
+		void Draw(Graphics& gfx) const;
+	private:
+		Vec2 pos{ float(Graphics::ScreenWidth) / 2.0f + 200.0f, float(Graphics::ScreenHeight) / 2.0f };
+		Vec2 vel{ 0.0f, 0.0f };
+		bool active = false;
+		static constexpr float speed = 150.0f;
+		static constexpr float radius = 11.0f;
+		static constexpr int damage = 3000;
 	};
 public:
 	bool Spawn(float dt);
@@ -62,10 +81,14 @@ public:
 	bool FireBulletAim(const Vec2& playerPos, float dt);
 	void UpdateBulletsAim(float dt);
 	void BulletAimHit(Player& player);
+	bool FireBulletRandom(std::mt19937& rng, float dt);
+	void UpdateBulletsRandom(float dt);
+	void BulletRandomHit(Player& player);
 	CircF GetCirc() const;
 	void Draw(Graphics& gfx) const;
 	void DrawBulletsBasic(Graphics& gfx) const;
 	void DrawBulletsAim(Graphics& gfx) const;
+	void DrawBulletsRandom(Graphics& gfx) const;
 private:
 	float spawnTimer = -10.0f;
 	Phase curPhase = Phase::Waiting;
@@ -73,7 +96,7 @@ private:
 	static constexpr float pi = 3.14159274f;
 	static constexpr float speed = 250.0f;
 	static constexpr float radius = 50.0f;
-	static constexpr int hpMax = 1000000;
+	static constexpr int hpMax = 2000000;
 	int hp = hpMax;
 	static constexpr float touchDamage = 3000.0f;
 	//bulletBasic
@@ -91,4 +114,11 @@ private:
 	static constexpr int RapidFireSalvo = 5;
 	int curSalvo = 0;
 	BulletAim bulletsAim[nBulletsAim];
+	//bulletRandom
+	static constexpr float fireRateRandom = 2.2f;
+	float fireTimeRandom = 0.0f;
+	static constexpr int nBulletsRandom = 200;
+	int currentBulletRandom = 0;
+	static constexpr int bulletsRandomFired = 60;
+	BulletRandom bulletsRandom[nBulletsRandom];
 };

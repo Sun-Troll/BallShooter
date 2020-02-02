@@ -27,6 +27,7 @@
 #include "Player.h"
 #include "SoundEffect.h"
 #include "Enemy0.h"
+#include <random>
 
 class Game
 {
@@ -46,6 +47,8 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
+	std::random_device rd;
+	std::mt19937 rng;
 	int curEnemy = 0;
 	bool basicFireSound = true;
 	Sound basicFire;
@@ -58,6 +61,7 @@ private:
 	Sound enemy0Die;
 	Sound enemy0FireBasic;
 	Sound enemy0FireAim;
+	Sound enemy0FireRandom;
 	FrameTimer ft;
 	Player player;
 	Enemy0 enemy0;

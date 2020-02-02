@@ -25,6 +25,7 @@ Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
+	rng(rd()),
 	basicFire(L"Sounds\\basicFire.wav"),
 	telFire(L"Sounds\\telFire.wav"),
 	telPort(L"Sounds\\telPort.wav"),
@@ -34,7 +35,8 @@ Game::Game(MainWindow& wnd)
 	enemy0PhaseSwitch(L"Sounds\\enemy0PhaseSwitch.wav"),
 	enemy0Die(L"Sounds\\enemy0Die.wav"),
 	enemy0FireBasic(L"Sounds\\enemy0FireBasic.wav"),
-	enemy0FireAim(L"Sounds\\enemy0FireAim.wav")
+	enemy0FireAim(L"Sounds\\enemy0FireAim.wav"),
+	enemy0FireRandom(L"Sounds\\enemy0FireRandom.wav")
 {
 }
 
@@ -164,6 +166,12 @@ void Game::UpdateModel()
 			}
 			enemy0.UpdateBulletsAim(dt);
 			enemy0.BulletAimHit(player);
+			if (enemy0.FireBulletRandom(rng, dt))
+			{
+				enemy0FireRandom.Play();
+			}
+			enemy0.UpdateBulletsRandom(dt);
+			enemy0.BulletRandomHit(player);
 
 			for (int i = 0; i < player.GetNBullets(); i++)
 			{
@@ -212,6 +220,7 @@ void Game::ComposeFrame()
 	{
 		enemy0.DrawBulletsBasic(gfx);
 		enemy0.DrawBulletsAim(gfx);
+		enemy0.DrawBulletsRandom(gfx);
 		enemy0.Draw(gfx);
 	}
 

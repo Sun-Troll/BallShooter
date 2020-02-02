@@ -170,7 +170,7 @@ bool Enemy0::FireBulletAim(const Vec2& playerPos, float dt)
 				}
 				else
 				{
-					curSalvo = RapidFireSalvo - (hp * 10 / hpMax);
+					curSalvo = RapidFireSalvo - hp * 10 / hpMax;
 					fireTimeAim = fireRateAim;
 				}
 			}
@@ -206,12 +206,68 @@ void Enemy0::UpdateBulletsAim(float dt)
 	}
 }
 
-void Enemy0::BulletAimHit(Player & player)
+void Enemy0::BulletAimHit(Player& player)
 {
 	assert(curPhase != Phase::Dead);
 	if (curPhase == Phase::First || curPhase == Phase::Second)
 	{
 		for (BulletAim& b : bulletsAim)
+		{
+			if (b.GetActive() && player.GetCirc().IsOverlapping(b.GetCirc()))
+			{
+				player.TakeDamage(b.Hit());
+			}
+		}
+	}
+}
+
+bool Enemy0::FireBulletRandom(std::mt19937& rng, float dt)
+{
+	assert(curPhase != Phase::Dead);
+	if (curPhase == Phase::Second)
+	{
+		fireTimeRandom -= dt;
+		if (fireTimeRandom <= 0.0f)
+		{
+			fireTimeRandom = fireRateRandom;
+			std::uniform_real_distribution<float> xyDist(-1000.0f, 1000.0f);
+			for (int a = 0; a <= bulletsRandomFired - hp * 100 / hpMax; a++)
+			{
+				bulletsRandom[currentBulletRandom].Spawn(Vec2(xyDist(rng), xyDist(rng)), pos);
+				if (currentBulletRandom < nBulletsRandom - 1)
+				{
+					currentBulletRandom++;
+				}
+				else
+				{
+					currentBulletRandom = 0;
+				}
+			}
+			return true;
+		}
+	}
+	return false;
+}
+
+void Enemy0::UpdateBulletsRandom(float dt)
+{
+	assert(curPhase != Phase::Dead);
+	if (curPhase == Phase::First || curPhase == Phase::Second)
+	{
+		for (BulletRandom& b : bulletsRandom)
+		{
+			b.Move(dt);
+			b.ClampScreen();
+		}
+	}
+}
+
+void Enemy0::BulletRandomHit(Player& player)
+{
+	assert(curPhase != Phase::Dead);
+	if (curPhase == Phase::Second)
+	{
+		for (BulletRandom& b : bulletsRandom)
 		{
 			if (b.GetActive() && player.GetCirc().IsOverlapping(b.GetCirc()))
 			{
@@ -275,11 +331,23 @@ void Enemy0::DrawBulletsAim(Graphics & gfx) const
 	}
 }
 
+void Enemy0::DrawBulletsRandom(Graphics & gfx) const
+{
+	assert(curPhase != Phase::Dead);
+	if (curPhase == Phase::First || curPhase == Phase::Second)
+	{
+		for (const BulletRandom& b : bulletsRandom)
+		{
+			b.Draw(gfx);
+		}
+	}
+}
+
 void Enemy0::BulletBasic::Spawn(const Vec2& targetPos, const Vec2& enemy0Pos)
 {
 	assert(!active);
 	pos = enemy0Pos;
-	vel = (targetPos)* speed;
+	vel = targetPos * speed;
 	active = true;
 }
 
@@ -398,5 +466,68 @@ void Enemy0::BulletAim::Draw(Graphics & gfx) const
 	if (active)
 	{
 		gfx.DrawCircle(GetCirc(), {255, 100, 0});
+	}
+}
+
+void Enemy0::BulletRandom::Spawn(const Vec2& velDir, const Vec2 & enemy0Pos)
+{
+	assert(!active);
+	pos = enemy0Pos;
+	vel = velDir.GetNormalized() * speed;
+	active = true;
+}
+
+void Enemy0::BulletRandom::Move(float dt)
+{
+	if (active)
+	{
+		pos += vel * dt;
+	}
+}
+
+void Enemy0::BulletRandom::ClampScreen()
+{
+	if (active)
+	{
+		if (pos.x < 399.0f + radius)
+		{
+			active = false;
+		}
+		else if (pos.x > float(Graphics::ScreenWidth) - radius)
+		{
+			active = false;
+		}
+		if (pos.y < -1.0f + radius)
+		{
+			active = false;
+		}
+		else if (pos.y > float(Graphics::ScreenHeight) - radius)
+		{
+			active = false;
+		}
+	}
+}
+
+int Enemy0::BulletRandom::Hit()
+{
+	active = false;
+	return damage;
+}
+
+CircF Enemy0::BulletRandom::GetCirc() const
+{
+	return CircF(pos, radius);
+}
+
+bool Enemy0::BulletRandom::GetActive() const
+{
+	return active;
+}
+
+void Enemy0::BulletRandom::Draw(Graphics & gfx) const
+{
+	if (active)
+	{
+		gfx.DrawCircle(GetCirc(), { 255, 200, 0 });
 	}
 }
