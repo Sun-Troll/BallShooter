@@ -65,6 +65,7 @@ private:
 	FrameTimer ft;
 	Player player;
 	Enemy0 enemy0;
+	bool started = false;
 	bool gameOver = false;
 	/********************************/
 };

@@ -50,10 +50,15 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
-	if (!gameOver)
-	{
-		float dt = ft.FrameDuration();
+	float dt = ft.FrameDuration();
 
+	if (!started && wnd.kbd.KeyIsPressed(VK_RETURN))
+	{
+		started = true;
+	}
+
+	if (!gameOver && started)
+	{
 		while (!wnd.kbd.KeyIsEmpty())
 		{
 			const Keyboard::Event e = wnd.kbd.ReadKey();
@@ -208,24 +213,27 @@ void Game::UpdateModel()
 
 void Game::ComposeFrame()
 {
-	for (int y = 0; y < Graphics::ScreenHeight; y++)
+	if (started)
 	{
-		for (int x = 397; x < 400; x++)
+		for (int y = 0; y < Graphics::ScreenHeight; y++)
 		{
-			gfx.PutPixel(x, y, Colors::White);
+			for (int x = 397; x < 400; x++)
+			{
+				gfx.PutPixel(x, y, Colors::White);
+			}
 		}
-	}
 
-	if (curEnemy == 0)
-	{
-		enemy0.DrawBulletsBasic(gfx);
-		enemy0.DrawBulletsAim(gfx);
-		enemy0.DrawBulletsRandom(gfx);
-		enemy0.Draw(gfx);
-	}
+		if (curEnemy == 0)
+		{
+			enemy0.DrawBulletsBasic(gfx);
+			enemy0.DrawBulletsAim(gfx);
+			enemy0.DrawBulletsRandom(gfx);
+			enemy0.Draw(gfx);
+		}
 
-	player.DrawBullets(gfx);
-	player.DrawTeleport(gfx);
-	player.DrawBombs(gfx);
-	player.Draw(gfx);
+		player.DrawBullets(gfx);
+		player.DrawTeleport(gfx);
+		player.DrawBombs(gfx);
+		player.Draw(gfx);
+	}
 }
